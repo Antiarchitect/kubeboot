@@ -1,21 +1,23 @@
 #!/usr/bin/env bash
 
-set -o pipefail
-
 declare -A PROPOSE_INSTALL=()
 
 fun_check() {
   checking="Checking $1... "
   echo -en "${Y}${checking}${NONE}"
-  for ((i=0; i < (25 - ${#checking}); i++)){ echo -n " "; }
+  for ((i=0; i < (40 - ${#checking}); i++)){ echo -n " "; }
 
   version=$($2 2> /dev/null)
   if [ "$?" -eq "0" ]; then
     echo -e "${G}OK! ${C}${version}${NONE}"
   else
-    PROPOSE_INSTALL[$1]=true
+    PROPOSE_INSTALL["$1"]=true
     echo -e "${R}NO! ${W}Please install $1 first.${NONE}"
   fi
+}
+
+fun_asdf() {
+  fun_check ASDF "asdf --version"
 }
 
 fun_docker() {
@@ -72,6 +74,7 @@ fun_run() {
   local BGC="\033[46m"
   local BGW="\033[47m"
 
+  fun_asdf
   fun_docker
   fun_virtualbox
   fun_minikube
