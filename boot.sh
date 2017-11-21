@@ -1,11 +1,13 @@
-#!/bin/sh
+#!/usr/bin/env bash
+
+set -o pipefail
 
 fun_check() {
   checking="Checking $1... "
   echo -en "${Y}${checking}${NONE}"
   for ((i=0; i < (25 - ${#checking}); i++)){ echo -n " "; }
 
-  version=$($2) 2> /dev/null
+  version=$($2 2> /dev/null)
   if [ "$?" -eq "0" ]; then
     echo -e "${G}OK! ${C}${version}${NONE}"
   else
