@@ -9,8 +9,9 @@ fun_run_check
 
 if [[ "${#PROPOSE_INSTALL[@]}" -gt 0 && -z "${PROPOSE_INSTALL[ASDF]+x}" ]]; then
   . ./lib/install.sh
+  fun_run_check
 fi
 
-fun_run_check
-
 set -e
+
+. ./lib/up.sh
