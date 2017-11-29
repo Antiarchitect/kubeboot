@@ -15,3 +15,5 @@ fi
 set -e
 
 . ./lib/up.sh
+
+minikube dashboard
