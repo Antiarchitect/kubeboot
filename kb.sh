@@ -9,7 +9,8 @@ fun_run_check
 
 if [[ "${#PROPOSE_INSTALL[@]}" -gt 0 ]]; then
   while true; do
-    read -p "There are some requirements that are not met, but I can help you install them. Proceed? [y/n]" yn
+    echo -e "${Y}Some requirements are not met, but Kubeboot can install them. Proceed? [y/n] ${NONE}"
+    read yn
     case $yn in
         [y]* ) . ./lib/install.sh; fun_run_check; break;;
         [n]* ) exit;;

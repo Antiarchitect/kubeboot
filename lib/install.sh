@@ -2,7 +2,7 @@
 
 set -e
 
-echo "Hi! This is Kubeboot install speaking! I will help you to install some packages. Hold on!"
+echo -e "${G}Hi! This is Kubeboot speaking! I will install some packages for you. Stick around!${NONE}"
 HELM_VERSION=2.7.2
 MINIKUBE_VERSION=0.23.0
 KUBECTL_VERSION=1.8.4
