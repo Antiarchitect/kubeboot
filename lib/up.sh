@@ -6,8 +6,9 @@ minikube_status=$(minikube status --format {{.MinikubeStatus}})
 set -e
 if [[ ${minikube_status} != "Running" ]]; then
   minikube start --insecure-registry localhost:5000
+#  su -c "CHANGE_MINIKUBE_NONE_USER=true minikube start --vm-driver=none --insecure-registry localhost:5000"
 fi
-eval $(minikube docker-env) # Need to explore this more thoroughly.
+eval $(minikube docker-env) # Need to explore this more thoroughly. VM drivers only.
 helm init --upgrade --kube-context "${context_name}" # Not sure if it belongs here. Should it be placed into language library part?
 helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator # Adding incubator repository.
 kubectl config use-context "${context_name}" # Ensure we are working with minikube context.
