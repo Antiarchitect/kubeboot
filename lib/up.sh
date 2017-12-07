@@ -13,10 +13,15 @@ helm init --upgrade --kube-context "${context_name}" # Not sure if it belongs he
 helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator # Adding incubator repository.
 kubectl config use-context "${context_name}" # Ensure we are working with minikube context.
 
+# Tiller wait workaround https://github.com/kubernetes/helm/issues/2114
+# We should wait until --wait option will be available for `helm init`
+kubectl rollout status -w deployment/tiller-deploy --namespace=kube-system;
+
 if [[ $(helm list --all --short | fgrep local-docker-registry | wc -l) == 0 ]]; then
   helm install incubator/docker-registry --name local-docker-registry
 fi
 
-if [[ $(helm list --all --short | fgrep local-prometheus | wc -l) == 0 ]]; then
-  helm install stable/prometheus --name local-prometheus
-fi
+# Prometheus is too heavy for now.
+#if [[ $(helm list --all --short | fgrep local-prometheus | wc -l) == 0 ]]; then
+#  helm install stable/prometheus --name local-prometheus
+#fi

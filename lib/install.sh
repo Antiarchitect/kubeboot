@@ -4,7 +4,7 @@ set -e
 
 echo -e "${G}Hi! This is Kubeboot speaking! I will install some packages for you. Stick around!${NONE}"
 HELM_VERSION=2.7.2
-MINIKUBE_VERSION=0.23.0
+MINIKUBE_VERSION=0.24.1
 KUBECTL_VERSION=1.8.4
 
 fun_asdf_install() {
