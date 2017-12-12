@@ -3,6 +3,12 @@
 set -o pipefail
 
 . ./lib/colors.sh
+. ./lib/check_os.sh
+
+os_check="Checking OS... "
+echo -en "${M}${os_check}${NONE}"
+for ((i=0; i < (40 - ${#os_check}); i++)){ echo -n " "; }
+echo -e "${G}OK! ${C}${_os}${NONE}"
 
 . ./lib/check.sh
 fun_run_check
