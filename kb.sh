@@ -2,15 +2,17 @@
 
 set -o pipefail
 
-. ./lib/colors.sh
-. ./lib/check_os.sh
+BASEDIR=$(dirname "$0")
+
+. ${BASEDIR}/lib/colors.sh
+. ${BASEDIR}/lib/check_os.sh
 
 os_check="Checking OS... "
 echo -en "${M}${os_check}${NONE}"
 for ((i=0; i < (40 - ${#os_check}); i++)){ echo -n " "; }
 echo -e "${G}OK! ${C}${_os}${NONE}"
 
-. ./lib/check.sh
+. ${BASEDIR}/lib/check.sh
 fun_run_check
 
 if [[ "${#PROPOSE_INSTALL[@]}" -gt 0 ]]; then
@@ -18,7 +20,7 @@ if [[ "${#PROPOSE_INSTALL[@]}" -gt 0 ]]; then
     echo -e "${Y}Some requirements are not met, but Kubeboot can install them. Proceed? [y/n] ${NONE}"
     read yn
     case $yn in
-        [y]* ) . ./lib/install.sh; fun_run_check; break;;
+        [y]* ) . ${BASEDIR}/lib/install.sh; fun_run_check; break;;
         [n]* ) exit;;
         * ) echo "Please answer y or n.";;
     esac
@@ -32,6 +34,6 @@ fi
 
 set -e
 
-. ./lib/up.sh
+. ${BASEDIR}/lib/up.sh
 
 minikube dashboard
