@@ -22,8 +22,8 @@ minikube delete || true && ${HOME}/PROJECTS/kubeboot/kb.sh && eval $(minikube do
 ```bash
 docker build . --tag my-rails-dev-bootstrap --build-arg uid=${UID} --build-arg rails_version=5.1.4
 docker run --rm -v ${HOME}/PROJECTS:/service:Z my-rails-dev-bootstrap rails new testapp-postgresql --database postgresql
-docker run --rm -v ${HOME}/PROJECTS:/service:Z my-rails-dev sh -c "bundle config --local path ./vendor/bundle; bundle config --local bin ./vendor/bundle/bin"
-docker run --rm -v ${HOME}/PROJECTS:/service:Z my-rails-dev bundle install
+docker run --rm -v ${HOME}/PROJECTS/testapp-postgresql:/service:Z my-rails-dev sh -c "bundle config --local path ./vendor/bundle; bundle config --local bin ./vendor/bundle/bin"
+docker run --rm -v ${HOME}/PROJECTS/testapp-postgresql:/service:Z my-rails-dev bundle install
 ```
 
 ## Unison part (separate terminal - it won't release it)
