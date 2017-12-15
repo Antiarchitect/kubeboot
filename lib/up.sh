@@ -2,25 +2,24 @@
 
 echo -e "${G}Copying unison sync tool binaries...${NONE}"
 minikube_bindir_seed="${HOME}/.minikube/files/usr/bin"
-mkdir -p $minikube_bindir_seed
+mkdir -p "${minikube_bindir_seed}"
 cp ${BASEDIR}/bin/unison ${BASEDIR}/bin/unison-fsmonitor $minikube_bindir_seed
 
-context_name="minikube"
-set +e
-minikube_status=$(minikube status --format {{.MinikubeStatus}})
-set -e
-if [[ ${minikube_status} != "Running" ]]; then
+if [[ "$(minikube status --format {{.MinikubeStatus}} || true)" != "Running" ]]; then
   echo -e "${G}Starting Minikube...${NONE}"
   minikube start
 fi
 
+app_directory="/app"
 echo -e "${G}Allowing root access to the Minikube node...${NONE}"
 minikube ssh "sudo mkdir -p /root/.ssh"
 minikube ssh "sudo chmod 700 /root/.ssh"
 minikube ssh "sudo cp /home/docker/.ssh/authorized_keys /root/.ssh"
 minikube ssh "sudo chown -R root:root /root/.ssh"
-minikube ssh "sudo mkdir -p /app"
+minikube ssh "sudo rm -rf ${app_directory}"
+minikube ssh "sudo mkdir -p ${app_directory}"
 
+context_name="minikube"
 echo -e "${G}Initializing Helm...${NONE}"
 helm init --upgrade --kube-context "${context_name}" # Not sure if it belongs here. Should it be placed into language library part?
 helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator # Adding incubator repository.

@@ -33,7 +33,7 @@ ${HOME}/PROJECTS/kubeboot/bin/unison ${HOME}/PROJECTS/testapp-postgresql ssh://r
 
 ## Helm install part
 ```bash
-helm delete --purge my-rails-dev && helm install --name my-rails-dev ${HOME}/PROJECTS/helm-rails
+helm delete --purge my-rails-dev || true && helm install --name my-rails-dev ${HOME}/PROJECTS/helm-rails
 ```
 
 ## Know your app url:
