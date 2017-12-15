@@ -4,7 +4,7 @@
 
 # Up
 Install docker and VirtualBox by yourself.
-Replace your `${HOME}/PROJECTS` in commands below to your projects/code directory path.
+Replace `${HOME}/PROJECTS` in commands below to your projects/code directory path.
 
 ## Repos you need to clone:
 ```bash
