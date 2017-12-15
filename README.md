@@ -7,9 +7,11 @@ Install docker and VirtualBox by yourself.
 Replace your `${HOME}/PROJECTS` in commands below to your projects/code directory path.
 
 ## Repos you need to clone:
+```bash
 git clone https://github.com/Antiarchitect/kubeboot.git
 git clone https://github.com/Antiarchitect/docker-rails.git
 git clone https://github.com/Antiarchitect/helm-rails.git
+```
 
 ## Minikube part
 ```bash
