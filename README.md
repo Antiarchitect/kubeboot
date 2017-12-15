@@ -33,5 +33,12 @@ ${HOME}/PROJECTS/kubeboot/bin/unison ${HOME}/PROJECTS/testapp-postgresql ssh://r
 
 ## Helm install part
 ```bash
-helm install --name my-rails-dev ${HOME}/PROJECTS/helm-rails
+helm delete --purge my-rails-dev && helm install --name my-rails-dev ${HOME}/PROJECTS/helm-rails
+```
+
+## Know your app url:
+```bash
+export NODE_PORT=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services my-rails-dev-helm-rails)
+export NODE_IP=$(kubectl get nodes --namespace default -o jsonpath="{.items[0].status.addresses[0].address}")
+echo http://$NODE_IP:$NODE_PORT
 ```
