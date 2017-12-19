@@ -12,6 +12,11 @@ echo -en "${M}${os_check}${NONE}"
 for ((i=0; i < (40 - ${#os_check}); i++)){ echo -n " "; }
 echo -e "${G}OK! ${C}${_os}${NONE}"
 
+HELM_VERSION=${HELM_VERSION:-2.7.2}
+MINIKUBE_VERSION=${MINIKUBE_VERSION:-0.24.1}
+KUBECTL_VERSION=${KUBECTL_VERSION:-1.9.0}
+KUBERNETES_VERSION=${KUBERNETES_VERSION:-1.8.0}
+
 . ${BASEDIR}/lib/check.sh
 fun_run_check
 

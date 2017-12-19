@@ -7,7 +7,7 @@ cp ${BASEDIR}/bin/unison ${BASEDIR}/bin/unison-fsmonitor $minikube_bindir_seed
 
 if [[ "$(minikube status --format {{.MinikubeStatus}} || true)" != "Running" ]]; then
   echo -e "${G}Starting Minikube...${NONE}"
-  minikube start
+  minikube start --kubernetes-version v${KUBERNETES_VERSION}
 fi
 
 app_directory="/app"
