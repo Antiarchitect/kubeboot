@@ -28,7 +28,7 @@ docker run --rm -v ${HOME}/PROJECTS/testapp-postgresql:/service:Z my-rails-dev b
 
 ## Unison part (separate terminal - it won't release it)
 ```bash
-${HOME}/PROJECTS/kubeboot/bin/unison ${HOME}/PROJECTS/testapp-postgresql ssh://root@$(minikube ip)//app -sshargs "-o StrictHostKeyChecking=no -i $(minikube ssh-key)" -ignorearchives -owner -group -numericids -auto -batch -repeat watch -ignore "Path tmp/pids"
+${HOME}/PROJECTS/kubeboot/bin/unison ${HOME}/PROJECTS/testapp-postgresql ssh://root@$(minikube ip)//app -sshargs "-o StrictHostKeyChecking=no -i $(minikube ssh-key)" -ignorearchives -owner -group -numericids -auto -batch -prefer newer -repeat watch -ignore "Path tmp/pids"
 ```
 
 ## Helm install part
