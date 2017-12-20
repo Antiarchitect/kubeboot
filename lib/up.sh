@@ -11,7 +11,6 @@ if [[ "$(minikube status --format {{.MinikubeStatus}} || true)" != "Running" ]];
 fi
 
 app_directory="/app"
-db_directory="/app/.data/postgresql"
 echo -e "${G}Allowing root access to the Minikube node...${NONE}"
 minikube ssh "sudo mkdir -p /root/.ssh"
 minikube ssh "sudo chmod 700 /root/.ssh"
@@ -19,9 +18,6 @@ minikube ssh "sudo cp /home/docker/.ssh/authorized_keys /root/.ssh"
 minikube ssh "sudo chown -R root:root /root/.ssh"
 minikube ssh "sudo rm -rf ${app_directory}"
 minikube ssh "sudo mkdir -p ${app_directory}"
-minikube ssh "sudo rm -rf ${db_directory}"
-minikube ssh "sudo mkdir -p ${db_directory}"
-minikube ssh "sudo chown -R ${UID}:${UID} /app"
 
 context_name="minikube"
 echo -e "${G}Initializing Helm...${NONE}"

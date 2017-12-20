@@ -26,7 +26,15 @@ docker run --rm -v ${HOME}/PROJECTS/testapp-postgresql:/service:Z my-rails-dev s
 docker run --rm -v ${HOME}/PROJECTS/testapp-postgresql:/service:Z my-rails-dev bundle install
 ```
 
-## Unison part (separate terminal - it won't release it)
+## Sync workdir into the VM
+**Important!** For simplicity of the setup we will have one synchronized Persistent Volume so all subpaths
+(e.g. database data directory inside your Rails project should be created manually on your dev machine before the sync).
+For example for postgresql database run this on your development machine:
+```bash
+mkdir -p ${HOME}/PROJECTS/testapp-postgresql/.data/postgresql
+```
+
+### Unison part (do in separate terminal)
 ```bash
 ${HOME}/PROJECTS/kubeboot/bin/unison ${HOME}/PROJECTS/testapp-postgresql ssh://root@$(minikube ip)//app -sshargs "-o StrictHostKeyChecking=no -i $(minikube ssh-key)" -ignorearchives -owner -group -numericids -auto -batch -prefer newer -repeat watch -ignore "Path tmp/pids"
 ```
