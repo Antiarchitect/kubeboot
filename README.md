@@ -18,7 +18,7 @@ source "${HOME}/.bashrc"
 ## Repos you need to clone for this example:
 Clone the repos below to your projects directory.
 ```bash
-cd ${CODE}https://start.fedoraproject.org/
+cd ${CODE}
 git clone https://github.com/Antiarchitect/kubeboot.git 
 git clone https://github.com/Antiarchitect/docker-rails.git
 git clone https://github.com/Antiarchitect/docker-postgresql-dev.git # If you need PostgreSQL in you Project.
