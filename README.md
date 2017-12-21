@@ -48,6 +48,12 @@ cd ${CODE} && git clone https://github.com/Antiarchitect/testapp-postgresql.git
 ```bash
 docker build . --tag my-rails-dev-bootstrap --build-arg uid=${UID} --build-arg rails_version=5.1.4
 docker run --rm -v ${CODE}:/service:Z my-rails-dev-bootstrap rails new testapp-postgresql --database postgresql
+```
+
+## Configure bundler and install gems.
+**Important!** Open new terminal to avoid Minikube Docker context.
+```bash
+docker build ${CODE}/docker-rails/ --tag my-rails-dev --build-arg uid=${UID}
 docker run --rm -v ${CODE}/testapp-postgresql:/service:Z my-rails-dev sh -c "bundle config --local path ./vendor/bundle; bundle config --local bin ./vendor/bundle/bin"
 docker run --rm -v ${CODE}/testapp-postgresql:/service:Z my-rails-dev bundle install
 ```
