@@ -18,6 +18,7 @@ minikube ssh "sudo cp /home/docker/.ssh/authorized_keys /root/.ssh"
 minikube ssh "sudo chown -R root:root /root/.ssh"
 minikube ssh "sudo rm -rf ${app_directory}"
 minikube ssh "sudo mkdir -p ${app_directory}"
+minikube ssh "sudo chown -R ${UID}:${UID} ${app_directory}"
 
 context_name="minikube"
 echo -e "${G}Initializing Helm...${NONE}"
