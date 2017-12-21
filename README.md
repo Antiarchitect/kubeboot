@@ -30,7 +30,7 @@ git clone https://github.com/Antiarchitect/helm-rails.git
 minikube stop || true && ${CODE}/kubeboot/kb.sh
 ```
 
-## Building images within Minikube docker context.
+## Building images within Minikube docker context
 ```bash
 eval $(minikube docker-env)
 docker build ${CODE}/docker-rails/ --tag my-rails-dev --build-arg uid=${UID}
@@ -43,7 +43,8 @@ docker build ${CODE}/docker-postgresql-dev/ --tag my-postgresql-dev --build-arg 
 cd ${CODE} && git clone https://github.com/Antiarchitect/testapp-postgresql.git
 ```
 
-## or create it by yourself application
+## ... or create it by yourself
+**Important!** Open new terminal to avoid Minikube Docker context.
 ```bash
 docker build . --tag my-rails-dev-bootstrap --build-arg uid=${UID} --build-arg rails_version=5.1.4
 docker run --rm -v ${CODE}:/service:Z my-rails-dev-bootstrap rails new testapp-postgresql --database postgresql
