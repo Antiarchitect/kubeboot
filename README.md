@@ -64,7 +64,7 @@ mkdir -p ${CODE}/testapp-postgresql/.data/postgresql
 ### Prerequisites
 Add unison binaries to your local bin directory (platform specific - check needed):
 ```bash
-cp ${CODE}/kubeboot/bin/$(uname | tr '[:upper:]' '[:lower:]')-amd64/unison ${HOME}/bin
+cp ${CODE}/kubeboot/bin/$(uname | tr '[:upper:]' '[:lower:]')-amd64/unison* ${HOME}/bin
 ``` 
 
 ### Sync (do in standalone terminal window)
