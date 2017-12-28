@@ -55,12 +55,8 @@ if [ -n "${project_path}" ]; then
     docker build ${dockerfiles_path} --tag ${dockerfiles_tag} --build-arg uid=${UID}
   done
 
-  for command in "${config_commands[@]}";
-  do
-    eval "${command}"
-  done
-
-  if [ -n "${config_bundle_install}" ]; then
+  # Bundler
+  if [ -f "${project_path}/Gemfile" ]; then
     docker run --rm -v ${project_path}:/service:Z "${config_app_image_tag}" sh -c "bundle config --local path ./vendor/bundle; bundle config --local bin ./vendor/bundle/bin"
     docker run --rm -v ${project_path}:/service:Z "${config_app_image_tag}" bundle install
   fi
