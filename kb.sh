@@ -41,4 +41,37 @@ set -e
 
 . ${BASEDIR}/lib/up.sh
 
+project_path="${1}"
+
+if [ -n "${project_path}" ]; then
+  CODE=${HOME}/PROJECTS
+  echo "HI ${CODE} is your projects dir."
+
+  docker build ${CODE}/docker-rails/ --tag my-rails-dev --build-arg uid=${UID}
+  docker build ${CODE}/docker-postgresql-dev/ --tag my-postgresql-dev --build-arg uid=${UID}
+  docker run --rm -v ${project_path}:/service:Z my-rails-dev sh -c "bundle config --local path ./vendor/bundle; bundle config --local bin ./vendor/bundle/bin"
+  docker run --rm -v ${project_path}:/service:Z my-rails-dev bundle install
+  eval $(minikube docker-env)
+
+  docker build ${CODE}/docker-rails/ --tag my-rails-dev --build-arg uid=${UID}
+  docker build ${CODE}/docker-postgresql-dev/ --tag my-postgresql-dev --build-arg uid=${UID}
+
+  mkdir -p ${project_path}/.data/postgresql
+  
+  ${BASEDIR}/bin/$(uname | tr '[:upper:]' '[:lower:]')-amd64/unison ${project_path} ssh://root@$(minikube ip)//app \
+  -sshargs "-o StrictHostKeyChecking=no -i $(minikube ssh-key)" \
+  -ignorearchives \
+  -owner \
+  -group \
+  -numericids \
+  -auto \
+  -batch \
+  -prefer newer \
+  -repeat watch \
+  -ignore "Path tmp/pids" \
+  &
+
+  helm delete --purge my-rails-dev || true && helm install --name my-rails-dev ${CODE}/helm-rails
+fi
+
 minikube dashboard

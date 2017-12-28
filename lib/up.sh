@@ -24,7 +24,6 @@ minikube ssh "sudo chown -R ${UID}:${UID} ${app_directory}"
 context_name="minikube"
 echo -e "${G}Initializing Helm...${NONE}"
 helm init --upgrade --kube-context "${context_name}" # Not sure if it belongs here. Should it be placed into language library part?
-helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator # Adding incubator repository.
 kubectl config use-context "${context_name}" # Ensure we are working with minikube context.
 
 # this for loop waits until kubectl can access the api server that Minikube has created
