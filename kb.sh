@@ -44,20 +44,42 @@ set -e
 project_path="${1}"
 
 if [ -n "${project_path}" ]; then
-  CODE=${HOME}/PROJECTS
-  echo "HI ${CODE} is your projects dir."
+  . ${BASEDIR}/lib/yaml_parser.sh
 
-  docker build ${CODE}/docker-rails/ --tag my-rails-dev --build-arg uid=${UID}
-  docker build ${CODE}/docker-postgresql-dev/ --tag my-postgresql-dev --build-arg uid=${UID}
-  docker run --rm -v ${project_path}:/service:Z my-rails-dev sh -c "bundle config --local path ./vendor/bundle; bundle config --local bin ./vendor/bundle/bin"
-  docker run --rm -v ${project_path}:/service:Z my-rails-dev bundle install
+  eval $(parse_yaml ${project_path}/kubeboot.yaml "config_")
+
+  for i in "${!config_dockerfiles__path[@]}";
+  do
+    dockerfiles_path="${project_path}/${config_dockerfiles__path[$i]}"
+    dockerfiles_tag=${config_dockerfiles__tag[$i]}
+    docker build ${dockerfiles_path} --tag ${dockerfiles_tag} --build-arg uid=${UID}
+  done
+
+  for command in "${config_commands[@]}";
+  do
+    eval "${command}"
+  done
+
+  if [ -n "${config_bundle_install}" ]; then
+    docker run --rm -v ${project_path}:/service:Z "${config_app_image_tag}" sh -c "bundle config --local path ./vendor/bundle; bundle config --local bin ./vendor/bundle/bin"
+    docker run --rm -v ${project_path}:/service:Z "${config_app_image_tag}" bundle install
+  fi
+
   eval $(minikube docker-env)
+  for i in "${!config_dockerfiles__path[@]}";
+  do
+    dockerfiles_path="${project_path}/${config_dockerfiles__path[$i]}"
+    dockerfiles_tag=${config_dockerfiles__tag[$i]}
+    docker build ${dockerfiles_path} --tag ${dockerfiles_tag} --build-arg uid=${UID}
+  done
 
-  docker build ${CODE}/docker-rails/ --tag my-rails-dev --build-arg uid=${UID}
-  docker build ${CODE}/docker-postgresql-dev/ --tag my-postgresql-dev --build-arg uid=${UID}
+  helm delete --purge "${config_app_image_tag}" || true
 
-  mkdir -p ${project_path}/.data/postgresql
-  
+  for subdir in "${config_syncsubdirs[@]}";
+  do
+    mkdir -p "${project_path}/${subdir}"
+  done
+
   ${BASEDIR}/bin/$(uname | tr '[:upper:]' '[:lower:]')-amd64/unison ${project_path} ssh://root@$(minikube ip)//app \
   -sshargs "-o StrictHostKeyChecking=no -i $(minikube ssh-key)" \
   -ignorearchives \
@@ -71,7 +93,11 @@ if [ -n "${project_path}" ]; then
   -ignore "Path tmp/pids" \
   &
 
-  helm delete --purge my-rails-dev || true && helm install --name my-rails-dev ${CODE}/helm-rails
+  unison_pid=$!
+
+  helm install --name "${config_app_image_tag}" "${project_path}/.helm"
+
+  wait ${unison_pid}
 fi
 
 minikube dashboard
