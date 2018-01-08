@@ -14,7 +14,7 @@ echo -e "${G}OK! ${C}${_os}${NONE}"
 
 HELM_VERSION=${HELM_VERSION:-2.7.2}
 MINIKUBE_VERSION=${MINIKUBE_VERSION:-0.24.1}
-KUBECTL_VERSION=${KUBECTL_VERSION:-1.9.0}
+KUBECTL_VERSION=${KUBECTL_VERSION:-1.9.1}
 KUBERNETES_VERSION=${KUBERNETES_VERSION:-1.8.0}
 
 . ${BASEDIR}/lib/check.sh
@@ -57,8 +57,7 @@ if [ -n "${project_path}" ]; then
 
   # Bundler
   if [ -f "${project_path}/Gemfile" ]; then
-    docker run --rm -v ${project_path}:/service:Z "${config_app_image_tag}" sh -c "bundle config --local path ./vendor/bundle; bundle config --local bin ./vendor/bundle/bin"
-    docker run --rm -v ${project_path}:/service:Z "${config_app_image_tag}" bundle install
+    docker run --rm -v ${project_path}:/service:Z "${config_app_image_tag}" sh -c "bundle config --local path ./vendor/bundle && bundle config --local bin ./vendor/bundle/bin && bundle install"
   fi
 
   eval $(minikube docker-env)
