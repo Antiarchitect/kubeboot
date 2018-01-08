@@ -48,18 +48,6 @@ if [ -n "${project_path}" ]; then
 
   eval $(parse_yaml ${project_path}/kubeboot.yaml "config_")
 
-  for i in "${!config_dockerfiles__path[@]}";
-  do
-    dockerfiles_path="${project_path}/${config_dockerfiles__path[$i]}"
-    dockerfiles_tag=${config_dockerfiles__tag[$i]}
-    docker build ${dockerfiles_path} --tag ${dockerfiles_tag} --build-arg uid=${UID}
-  done
-
-  # Bundler
-  if [ -f "${project_path}/Gemfile" ]; then
-    docker run --rm -v ${project_path}:/service:Z "${config_app_image_tag}" sh -c "bundle config --local path ./vendor/bundle && bundle config --local bin ./vendor/bundle/bin && bundle install"
-  fi
-
   eval $(minikube docker-env)
   for i in "${!config_dockerfiles__path[@]}";
   do
@@ -75,6 +63,11 @@ if [ -n "${project_path}" ]; then
     mkdir -p "${project_path}/${subdir}"
   done
 
+  app_directory="/app"
+  minikube ssh "sudo rm -rf ${app_directory}"
+  minikube ssh "sudo mkdir -p ${app_directory}"
+  minikube ssh "sudo chown -R ${UID}:${UID} ${app_directory}"
+
   ${BASEDIR}/bin/$(uname | tr '[:upper:]' '[:lower:]')-amd64/unison ${project_path} ssh://root@$(minikube ip)//app \
   -sshargs "-o StrictHostKeyChecking=no -i $(minikube ssh-key)" \
   -ignorearchives \
@@ -89,6 +82,11 @@ if [ -n "${project_path}" ]; then
   &
 
   unison_pid=$!
+
+  # Bundler
+  if [ -f "${project_path}/Gemfile.lock" ]; then
+    minikube ssh "docker run --rm -v /app:/service:Z ${config_app_image_tag} sh -c 'bundle config --local path ./vendor/bundle && bundle config --local bin ./vendor/bundle/bin && bundle install'"
+  fi
 
   helm install --name "${config_app_image_tag}" "${project_path}/.helm"
 

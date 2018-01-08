@@ -11,15 +11,11 @@ if [[ "$(minikube status --format {{.MinikubeStatus}} || true)" != "Running" ]];
   minikube start --kubernetes-version v${KUBERNETES_VERSION}
 fi
 
-app_directory="/app"
 echo -e "${G}Allowing root access to the Minikube node...${NONE}"
 minikube ssh "sudo mkdir -p /root/.ssh"
 minikube ssh "sudo chmod 700 /root/.ssh"
 minikube ssh "sudo cp /home/docker/.ssh/authorized_keys /root/.ssh"
 minikube ssh "sudo chown -R root:root /root/.ssh"
-minikube ssh "sudo rm -rf ${app_directory}"
-minikube ssh "sudo mkdir -p ${app_directory}"
-minikube ssh "sudo chown -R ${UID}:${UID} ${app_directory}"
 
 context_name="minikube"
 echo -e "${G}Initializing Helm...${NONE}"
