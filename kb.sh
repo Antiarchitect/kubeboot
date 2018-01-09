@@ -60,7 +60,7 @@ if [ -n "${project_path}" ]; then
   minikube ssh "sudo mkdir -p ${app_directory}"
   minikube ssh "sudo chown -R ${UID}:${UID} ${app_directory}"
 
-  ${BASEDIR}/bin/$(uname | tr '[:upper:]' '[:lower:]')-amd64/unison ${project_path} ssh://root@$(minikube ip)//app \
+  ${BASEDIR}/bin/${unison_platform}/unison ${project_path} ssh://root@$(minikube ip)//app \
   -sshargs "-o StrictHostKeyChecking=no -i $(minikube ssh-key)" \
   -ignorearchives \
   -owner \
