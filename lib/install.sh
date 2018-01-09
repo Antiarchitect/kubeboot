@@ -26,7 +26,7 @@ do
     rm -rf $HOME/.asdf
     git clone https://github.com/asdf-vm/asdf.git $HOME/.asdf --branch v0.4.0
 
-    case "$(uname -s)" in
+    case "${_os}" in
       Linux*)     filepath="$HOME/.bashrc";;
       Mac*)       filepath="$HOME/.bash_profile";;
       *)
