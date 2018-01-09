@@ -70,13 +70,14 @@ if [ -n "${project_path}" ]; then
   -auto \
   -batch \
   -prefer newer \
+  -fastcheck true \
   -repeat watch \
   -ignore "Path tmp/pids" \
   &
 
   unison_pid=$!
 
-  sleep 3 # Time to sync.
+  sleep 5 # Time to sync.
 
   for i in "${!config_dockerfiles__path[@]}";
   do
