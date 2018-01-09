@@ -33,13 +33,13 @@ do
     esac
     touch "${filepath}"
   
-    if [[ $(cat ${filepath} | fgrep '. $HOME/.asdf/asdf.sh' | wc -l) == 0 ]]; then
+    if [[ $(cat ${filepath} | fgrep '. $HOME/.asdf/asdf.sh' | wc -l) -eq "0" ]]; then
       echo -e '\n. $HOME/.asdf/asdf.sh' >> ${filepath}
     fi
     chmod +x "$HOME/.asdf/asdf.sh"
     . "$HOME/.asdf/asdf.sh"
   
-    if [[ $(cat ${filepath} | fgrep '. $HOME/.asdf/completions/asdf.bash' | wc -l) == 0 ]]; then
+    if [[ $(cat ${filepath} | fgrep '. $HOME/.asdf/completions/asdf.bash' | wc -l) -eq "0" ]]; then
       echo -e '\n. $HOME/.asdf/completions/asdf.bash' >> ${filepath}
     fi
     chmod +x "$HOME/.asdf/completions/asdf.bash"
