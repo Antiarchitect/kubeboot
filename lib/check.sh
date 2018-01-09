@@ -33,7 +33,16 @@ fun_check_installable() {
 }
 
 fun_run_check() {
-  fun_check VirtualBox "VBoxManage --version"
+  case "${minikube_driver}" in
+    virtualbox)
+      fun_check VirtualBox "VBoxManage --version"
+      ;;
+    hyperkit)
+      fun_check HyperKit "hyperkit -version"
+      ;;
+    *)
+  esac
+
   #fun_check Docker "docker --version"
   fun_check_installable ASDF "asdf --version"
   fun_check_installable MiniKube "minikube version"

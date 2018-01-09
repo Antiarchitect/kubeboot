@@ -3,18 +3,6 @@
 echo -e "${G}Copying unison sync tool binaries...${NONE}"
 minikube_bindir_seed="${HOME}/.minikube/files/usr/bin"
 mkdir -p "${minikube_bindir_seed}"
-# As VirtualBox runs linux-amd64 we should copy appropriate binaries.
-case "${_os}" in
-  Linux*)
-    unison_platform="linux-amd64"
-    minikube_driver="virtualbox"
-    ;;
-  Mac*)
-    unison_platform="darwin-amd64"
-    minikube_driver="hyperkit"
-    ;;
-  *)
-esac
 cp ${BASEDIR}/bin/${unison_platform}/unison* $minikube_bindir_seed
 
 if [[ "$(minikube status --format {{.MinikubeStatus}} || true)" != "Running" ]]; then
