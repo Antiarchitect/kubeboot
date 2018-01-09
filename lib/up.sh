@@ -4,11 +4,22 @@ echo -e "${G}Copying unison sync tool binaries...${NONE}"
 minikube_bindir_seed="${HOME}/.minikube/files/usr/bin"
 mkdir -p "${minikube_bindir_seed}"
 # As VirtualBox runs linux-amd64 we should copy appropriate binaries.
-cp ${BASEDIR}/bin/linux-amd64/unison* $minikube_bindir_seed
+case "${_os}" in
+  Linux*)
+    unison_platform="linux-amd64"
+    minikube_driver="virtualbox"
+    ;;
+  Mac*)
+    unison_platform="darwin-amd64"
+    minikube_driver="hyperkit"
+    ;;
+  *)
+esac
+cp ${BASEDIR}/bin/${unison_platform}/unison* $minikube_bindir_seed
 
 if [[ "$(minikube status --format {{.MinikubeStatus}} || true)" != "Running" ]]; then
   echo -e "${G}Starting Minikube...${NONE}"
-  minikube start --kubernetes-version v${KUBERNETES_VERSION}
+  minikube start --kubernetes-version v${KUBERNETES_VERSION} --vm-driver=${minikube_driver}
 fi
 
 echo -e "${G}Allowing root access to the Minikube node...${NONE}"
