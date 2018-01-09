@@ -34,7 +34,7 @@ fun_check_installable() {
 
 fun_run_check() {
   fun_check VirtualBox "VBoxManage --version"
-  fun_check Docker "docker --version"
+  #fun_check Docker "docker --version"
   fun_check_installable ASDF "asdf --version"
   fun_check_installable MiniKube "minikube version"
   fun_check_installable kubectl "kubectl version --client --short"

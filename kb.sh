@@ -48,13 +48,13 @@ if [ -n "${project_path}" ]; then
 
   eval $(parse_yaml ${project_path}/kubeboot.yaml "config_")
 
-  eval $(minikube docker-env)
-  for i in "${!config_dockerfiles__path[@]}";
-  do
-    dockerfiles_path="${project_path}/${config_dockerfiles__path[$i]}"
-    dockerfiles_tag=${config_dockerfiles__tag[$i]}
-    docker build ${dockerfiles_path} --tag ${dockerfiles_tag} --build-arg uid=${UID}
-  done
+#  eval $(minikube docker-env)
+#  for i in "${!config_dockerfiles__path[@]}";
+#  do
+#    dockerfiles_path="${project_path}/${config_dockerfiles__path[$i]}"
+#    dockerfiles_tag=${config_dockerfiles__tag[$i]}
+#    docker build ${dockerfiles_path} --tag ${dockerfiles_tag} --build-arg uid=${UID}
+#  done
 
   helm delete --purge "${config_app_image_tag}" || true
 
@@ -82,6 +82,15 @@ if [ -n "${project_path}" ]; then
   &
 
   unison_pid=$!
+
+  sleep 3 # Time to sync.
+
+  for i in "${!config_dockerfiles__path[@]}";
+  do
+    dockerfiles_path="/app/${config_dockerfiles__path[$i]}"
+    dockerfiles_tag=${config_dockerfiles__tag[$i]}
+    minikube ssh "docker build ${dockerfiles_path} --tag ${dockerfiles_tag} --build-arg uid=${UID}"
+  done
 
   # Bundler
   if [ -f "${project_path}/Gemfile.lock" ]; then
