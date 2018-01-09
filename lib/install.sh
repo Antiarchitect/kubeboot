@@ -25,9 +25,12 @@ do
   if [[ "${component}" == "ASDF" ]]; then
     rm -rf $HOME/.asdf
     git clone https://github.com/asdf-vm/asdf.git $HOME/.asdf --branch v0.4.0
-  
-  
-    filepath="$HOME/.bashrc"
+
+    case "$(uname -s)" in
+      Linux*)     filepath="$HOME/.bashrc";;
+      Mac*)       filepath="$HOME/.bash_profile";;
+      *)
+    esac
     touch "${filepath}"
   
     if [[ $(cat ${filepath} | fgrep '. $HOME/.asdf/asdf.sh' | wc -l) == 0 ]]; then
