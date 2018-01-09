@@ -28,6 +28,7 @@ do
   
   
     filepath="$HOME/.bashrc"
+    touch "${filepath}"
   
     if [[ $(cat ${filepath} | fgrep '. $HOME/.asdf/asdf.sh' | wc -l) == 0 ]]; then
       echo -e '\n. $HOME/.asdf/asdf.sh' >> ${filepath}
