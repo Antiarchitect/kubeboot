@@ -55,10 +55,11 @@ if [ -n "${project_path}" ]; then
     mkdir -p "${project_path}/${subdir}"
   done
 
+  primary_group=$(id -g)
   app_directory="/app"
   minikube ssh "sudo rm -rf ${app_directory}"
   minikube ssh "sudo mkdir -p ${app_directory}"
-  minikube ssh "sudo chown -R ${UID}:${UID} ${app_directory}"
+  minikube ssh "sudo chown -R ${UID}:${primary_group} ${app_directory}"
 
   ${BASEDIR}/bin/${unison_platform}/unison ${project_path} ssh://root@$(minikube ip)//app \
   -sshargs "-o StrictHostKeyChecking=no -i $(minikube ssh-key)" \
@@ -81,7 +82,7 @@ if [ -n "${project_path}" ]; then
   do
     dockerfiles_path="/app/${config_dockerfiles__path[$i]}"
     dockerfiles_tag=${config_dockerfiles__tag[$i]}
-    minikube ssh "docker build ${dockerfiles_path} --tag ${dockerfiles_tag} --build-arg uid=${UID}"
+    minikube ssh "docker build ${dockerfiles_path} --tag ${dockerfiles_tag} --build-arg uid=${UID} --build-arg gid=${primary_group}"
   done
 
   # Bundler
