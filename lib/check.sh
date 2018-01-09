@@ -2,8 +2,8 @@
 
 set -e
 
-declare -A PROPOSE_INSTALL=()
-declare -A REQUIRED_DEPENDENCIES=()
+declare -a PROPOSE_INSTALL=()
+declare -a REQUIRED_DEPENDENCIES=()
 
 fun_check() {
   component_name=$1
@@ -19,10 +19,10 @@ fun_check() {
     echo -e "${G}OK! ${C}${version}${NONE}"
   else
     if [ ${is_installable} ]; then
-      PROPOSE_INSTALL["${component_name}"]=true
+      PROPOSE_INSTALL+=("${component_name}")
       echo -e "${Y}NO! ${W}But Kubeboot is able to install ${component_name} for you!${NONE}"
     else
-      REQUIRED_DEPENDENCIES["${component_name}"]=true
+      REQUIRED_DEPENDENCIES+=("${component_name}")
       echo -e "${R}NO! ${W}Please install ${component_name} by yourself.${NONE}"
     fi
   fi
