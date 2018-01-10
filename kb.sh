@@ -41,7 +41,7 @@ set -e
 
 . ${BASEDIR}/lib/up.sh
 
-project_path="${1}"
+eval project_path="${1}"
 
 if [ -n "${project_path}" ]; then
   . ${BASEDIR}/lib/yaml_parser.sh

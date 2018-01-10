@@ -5,82 +5,24 @@
 # Example of running Rails app with PostgreSQL support within local Kubernetes cluster on Minikube.
 
 ## Prerequisites
-Install docker and VirtualBox by yourself.
-For convenience you should assign `${CODE}` variable pointing to the path of your code/projects directory. You can place it in your .bashrc,
-ensure however that `${CODE}` variable is not in use for something important already.
-
-Example:
-```bash
-echo -e 'CODE=${HOME}/PROJECTS' >> "${HOME}/.bashrc" # Replace ${HOME}/PROJECTS to your actual code directory.
-source "${HOME}/.bashrc"
-```
-
-## Repos you need to clone for this example:
-Clone the repos below to your projects directory.
-```bash
-cd ${CODE}
-git clone https://github.com/Antiarchitect/kubeboot.git 
-git clone https://github.com/Antiarchitect/docker-rails.git
-git clone https://github.com/Antiarchitect/docker-postgresql-dev.git # If you need PostgreSQL in you Project.
-git clone https://github.com/Antiarchitect/helm-rails.git
-```
-
-## Minikube part
-```bash
-minikube stop || true && ${CODE}/kubeboot/kb.sh
-```
-
-## Building images within Minikube docker context
-```bash
-eval $(minikube docker-env)
-docker build ${CODE}/docker-rails/ --tag my-rails-dev --build-arg uid=${UID}
-docker build ${CODE}/docker-postgresql-dev/ --tag my-postgresql-dev --build-arg uid=${UID}
-```
+Install VirtualBox (Linux) or Hyperkit (MacOS) by yourself.
 
 ## Clone test application
 
+Assume your projects path is 
 ```bash
-cd ${CODE} && git clone https://github.com/Antiarchitect/testapp-postgresql.git
+cd ~/PROJECTS && clone https://github.com/Antiarchitect/testapp-postgresql.git
 ```
 
-## ... or create it by yourself
-**Important!** Open new terminal to avoid Minikube Docker context.
+## Run kubeboot
 ```bash
-docker build . --tag my-rails-dev-bootstrap --build-arg uid=${UID} --build-arg rails_version=5.1.4
-docker run --rm -v ${CODE}:/service:Z my-rails-dev-bootstrap rails new testapp-postgresql --database postgresql
+~/PROJECTS/kubeboot/kb.sh ~/PROJECTS/testapp-postgresql/
 ```
 
-## Configure bundler and install gems.
-**Important!** Open new terminal to avoid Minikube Docker context.
+## Kubernetes dashboard
+It should open up automatically, but you can easily access it by typing:
 ```bash
-docker build ${CODE}/docker-rails/ --tag my-rails-dev --build-arg uid=${UID}
-docker run --rm -v ${CODE}/testapp-postgresql:/service:Z my-rails-dev sh -c "bundle config --local path ./vendor/bundle; bundle config --local bin ./vendor/bundle/bin"
-docker run --rm -v ${CODE}/testapp-postgresql:/service:Z my-rails-dev bundle install
-```
-
-## Sync workdir into the VM
-**Important!** For simplicity of the setup we will have one synchronized Persistent Volume so all subpaths
-(e.g. database data directory inside your Rails project should be created manually on your dev machine before the sync).
-For example for postgresql database run this on your development machine:
-```bash
-mkdir -p ${CODE}/testapp-postgresql/.data/postgresql
-```
-
-## Unison
-### Prerequisites
-Add unison binaries to your local bin directory (platform specific - check needed):
-```bash
-cp ${CODE}/kubeboot/bin/$(uname | tr '[:upper:]' '[:lower:]')-amd64/unison* ${HOME}/bin
-``` 
-
-### Sync (do in standalone terminal window)
-```bash
-unison ${CODE}/testapp-postgresql ssh://root@$(minikube ip)//app -sshargs "-o StrictHostKeyChecking=no -i $(minikube ssh-key)" -ignorearchives -owner -group -numericids -auto -batch -prefer newer -repeat watch -ignore "Path tmp/pids"
-```
-
-## Helm install part
-```bash
-helm delete --purge my-rails-dev || true && helm install --name my-rails-dev ${CODE}/helm-rails
+minikube dashboard
 ```
 
 ## Know your app url:
