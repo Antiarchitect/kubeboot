@@ -50,7 +50,7 @@ if [ -n "${project_path}" ]; then
 
   helm delete --purge "${config_app_image_tag}" || true
 
-  for subdir in "${config_sync_subdirs[@]}";
+  for subdir in "${config_sync_precreate_paths[@]}";
   do
     mkdir -p "${project_path}/${subdir}"
   done
