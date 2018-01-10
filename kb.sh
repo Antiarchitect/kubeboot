@@ -50,7 +50,7 @@ if [ -n "${project_path}" ]; then
 
   helm delete --purge "${config_app_image_tag}" || true
 
-  for subdir in "${config_syncsubdirs[@]}";
+  for subdir in "${config_sync_subdirs[@]}";
   do
     mkdir -p "${project_path}/${subdir}"
   done
@@ -60,6 +60,12 @@ if [ -n "${project_path}" ]; then
   minikube ssh "sudo rm -rf ${app_directory}"
   minikube ssh "sudo mkdir -p ${app_directory}"
   minikube ssh "sudo chown -R ${UID}:${primary_group} ${app_directory}"
+
+  ignore_string=""
+  for ignored in "${config_sync_ignored_paths[@]}";
+  do
+    ignore_string="${ignore_string}-ignore 'Path ${ignored}' "
+  done
 
   ${BASEDIR}/bin/${unison_platform}/unison ${project_path} ssh://root@$(minikube ip)//app \
   -sshargs "-o StrictHostKeyChecking=no -i $(minikube ssh-key)" \
@@ -71,13 +77,22 @@ if [ -n "${project_path}" ]; then
   -batch \
   -prefer newer \
   -fastcheck true \
-  -repeat watch \
-  -ignore "Path tmp/pids" \
-  &
+  $(eval ${ignore_string})
+
+  ${BASEDIR}/bin/${unison_platform}/unison ${project_path} ssh://root@$(minikube ip)//app \
+  -sshargs "-o StrictHostKeyChecking=no -i $(minikube ssh-key)" \
+  -ignorearchives \
+  -owner \
+  -group \
+  -numericids \
+  -auto \
+  -batch \
+  -prefer newer \
+  -fastcheck true \
+  -repeat 1 \
+  $(eval ${ignore_string}) &
 
   unison_pid=$!
-
-  sleep 5 # Time to sync.
 
   for i in "${!config_dockerfiles__path[@]}";
   do
