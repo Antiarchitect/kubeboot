@@ -13,7 +13,7 @@ Install VirtualBox (Linux) or Hyperkit (MacOS) by yourself.
 
 Assume your projects path is `~/PROJECTS`
 ```console
-cd ~/PROJECTS && clone https://github.com/Antiarchitect/testapp-postgresql.git
+cd ~/PROJECTS && git clone https://github.com/Antiarchitect/testapp-postgresql.git
 ```
 
 ### Initialize submodules
