@@ -14,7 +14,7 @@ fun_check() {
   echo -en "${M}${checking}${NONE}"
   for ((i=0; i < (40 - ${#checking}); i++)){ echo -n " "; }
 
-  version=$(${component_version_check} 2> /dev/null)
+  version=$(${component_version_check} | head -1 2> /dev/null)
   if [ "$?" -eq "0" ]; then
     echo -e "${G}OK! ${C}${version}${NONE}"
   else
@@ -36,6 +36,9 @@ fun_run_check() {
   case "${minikube_driver}" in
     virtualbox)
       fun_check VirtualBox "VBoxManage --version"
+      ;;
+    kvm2)
+      fun_check KVM "qemu-kvm -version"
       ;;
     hyperkit)
       fun_check HyperKit "hyperkit -version"
