@@ -59,7 +59,6 @@ to run inside the local kubernetes cluster.
 | `app_image_tag`           | Docker image with your application runtime. Will be used to name Helm release.          |
 | `dockerfiles`             | Array of hashes with all docker images to be built from your `.dockerfiles`.            | 
 | `sync_precreate_paths`    | Paths that should be precreated before sync with correct permissions                    |
-| `sync_ignored_paths`      | Paths in application directory that should not be synced. `tmp/pids` is a good example. |
 
 ## .dockerfiles
 Is the place all your service-related dockerfiles for development are located in.

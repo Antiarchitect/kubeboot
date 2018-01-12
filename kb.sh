@@ -64,7 +64,7 @@ if [ -n "${project_path}" ]; then
   ignore_string=""
   for ignored in "${config_sync_ignored_paths[@]}";
   do
-    ignore_string="${ignore_string}-ignore 'Path ${ignored}' "
+    ignore_string="${ignore_string}-ignore \"Path ${ignored}\" "
   done
 
   ${BASEDIR}/bin/${unison_platform}/unison ${project_path} ssh://root@$(minikube ip)//app \
@@ -76,23 +76,7 @@ if [ -n "${project_path}" ]; then
   -auto \
   -batch \
   -prefer newer \
-  -fastcheck true \
-  $(eval ${ignore_string})
-
-  ${BASEDIR}/bin/${unison_platform}/unison ${project_path} ssh://root@$(minikube ip)//app \
-  -sshargs "-o StrictHostKeyChecking=no -i $(minikube ssh-key)" \
-  -ignorearchives \
-  -owner \
-  -group \
-  -numericids \
-  -auto \
-  -batch \
-  -prefer newer \
-  -fastcheck true \
-  -repeat 1 \
-  $(eval ${ignore_string}) &
-
-  unison_pid=$!
+  -fastcheck true
 
   for i in "${!config_dockerfiles__path[@]}";
   do
@@ -108,7 +92,66 @@ if [ -n "${project_path}" ]; then
 
   helm install --name "${config_app_image_tag}" "${project_path}/.helm"
 
-  wait ${unison_pid}
+  minikube dashboard
+
+  fun_browser() {
+    local url="${1}"
+
+    while true
+    do
+      echo -e "${Y}Waiting for app to load...${NONE}"
+      curl "${url}" --max-time 5 -s -f -o /dev/null && break || true
+      sleep 1
+    done
+
+    echo -e "${G}Your app is ready!${NONE}"
+
+    if [ ! -z $BROWSER ]; then
+      $BROWSER "${url}"
+    elif which xdg-open > /dev/null; then
+      xdg-open "${url}"
+    elif which gnome-open > /dev/null; then
+      gnome-open "${url}"
+    elif which www-browser > /dev/null; then
+      www-browser "${url}"
+    elif which x-www-browser > /dev/null; then
+      x-www-browser "${url}"
+    else
+      echo "Could not detect the web browser to use."
+    fi
+  }
+
+  app_ip=$(kubectl get nodes --namespace default -o jsonpath="{.items[0].status.addresses[0].address}")
+  app_port=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services my-rails-dev-helm-rails)
+
+  fun_browser "${app_ip}:${app_port}"
+
+  ${BASEDIR}/bin/${unison_platform}/unison ${project_path} ssh://root@$(minikube ip)//app \
+  -sshargs "-o StrictHostKeyChecking=no -i $(minikube ssh-key)" \
+  -ignorearchives \
+  -owner \
+  -group \
+  -numericids \
+  -auto \
+  -batch \
+  -prefer newer \
+  -fastcheck true \
+  -repeat 1 &
+
+  unison_pid=$!
 fi
 
-minikube dashboard
+fun_clenup() {
+  if [ -n "${unison_pid}" ]; then
+    KILL ${unison_pid}
+  fi
+  minikube stop
+  exit
+}
+
+trap clean_up SIGHUP SIGINT SIGTERM
+
+while true
+do
+  sleep 1
+done
