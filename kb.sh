@@ -146,14 +146,11 @@ if [ -n "${project_path}" ]; then
 fi
 
 fun_clenup() {
-  if [ -n "${unison_pid}" ]; then
-    KILL ${unison_pid}
-  fi
   minikube stop
   exit
 }
 
-trap clean_up SIGHUP SIGINT SIGTERM
+trap fun_clean_up SIGHUP SIGINT SIGTERM
 
 while true
 do
