@@ -106,6 +106,8 @@ if [ -n "${project_path}" ]; then
 
     echo -e "${G}Your app is ready!${NONE}"
 
+    sleep 2
+
     if [ ! -z $BROWSER ]; then
       $BROWSER "${url}"
     elif which xdg-open > /dev/null; then
