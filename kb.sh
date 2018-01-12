@@ -123,10 +123,12 @@ if [ -n "${project_path}" ]; then
     fi
   }
 
-  app_ip=$(kubectl get nodes --namespace default -o jsonpath="{.items[0].status.addresses[0].address}")
-  app_port=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services my-rails-dev-helm-rails)
+  if [ ! -z ${config_web_service_name} ]; then
+    app_ip=$(kubectl get nodes --namespace default -o jsonpath="{.items[0].status.addresses[0].address}")
+    app_port=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services ${config_web_service_name})
 
-  fun_browser "${app_ip}:${app_port}"
+    fun_browser "${app_ip}:${app_port}"
+  fi
 
   ${BASEDIR}/bin/${unison_platform}/unison ${project_path} ssh://root@$(minikube ip)//app \
   -sshargs "-o StrictHostKeyChecking=no -i $(minikube ssh-key)" \
