@@ -76,7 +76,6 @@ if [ -n "${project_path}" ]; then
   -auto \
   -batch \
   -prefer newer \
-  -fastcheck true \
   -ignore "Path .git/"
 
   for i in "${!config_dockerfiles__path[@]}";
@@ -143,8 +142,7 @@ if [ -n "${project_path}" ]; then
   -auto \
   -batch \
   -prefer newer \
-  -fastcheck true \
-  -repeat watch
+  -repeat watch \
   -ignore "Path .git/"
 fi
 
