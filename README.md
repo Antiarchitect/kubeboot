@@ -13,6 +13,13 @@ brew tap markeissler/hyperkit
 brew install hyperkit
 ```
 
+### unison-fsmonitor install tips
+`unison-fsmonitor` is needed for Unison to work in watch mode.
+```console
+brew tap eugenmayer/dockersync
+brew install eugenmayer/dockersync/unox
+```
+
 ## Test application
 
 ###  Clone it
