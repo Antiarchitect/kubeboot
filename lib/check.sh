@@ -14,7 +14,7 @@ fun_check() {
   echo -en "${M}${checking}${NONE}"
   for ((i=0; i < (40 - ${#checking}); i++)){ echo -n " "; }
 
-  version=$(${component_version_check} | head -1 2> /dev/null)
+  version=$(${component_version_check} 2> /dev/null | head -1)
   if [ "$?" -eq "0" ]; then
     echo -e "${G}OK! ${C}${version}${NONE}"
   else
