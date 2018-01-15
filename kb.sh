@@ -76,7 +76,8 @@ if [ -n "${project_path}" ]; then
   -auto \
   -batch \
   -prefer newer \
-  -fastcheck true
+  -fastcheck true \
+  -ignore "Path .git/"
 
   for i in "${!config_dockerfiles__path[@]}";
   do
@@ -95,8 +96,12 @@ if [ -n "${project_path}" ]; then
   minikube dashboard
 
   fun_browser() {
-    local url="${1}"
+    local service="${1}"
 
+    local app_ip=$(kubectl get nodes --namespace default -o jsonpath="{.items[0].status.addresses[0].address}")
+    local app_port=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services ${service})
+    local url="${app_ip}:${app_port}"
+    
     while true
     do
       echo -e "${Y}Waiting for app to load...${NONE}"
@@ -106,7 +111,9 @@ if [ -n "${project_path}" ]; then
 
     echo -e "${G}Your app is ready!${NONE}"
 
-    sleep 2
+    sleep 3
+
+    # minikube service "${service}"
 
     if [ ! -z $BROWSER ]; then
       $BROWSER "${url}"
@@ -124,10 +131,7 @@ if [ -n "${project_path}" ]; then
   }
 
   if [ ! -z ${config_web_service_name} ]; then
-    app_ip=$(kubectl get nodes --namespace default -o jsonpath="{.items[0].status.addresses[0].address}")
-    app_port=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services ${config_web_service_name})
-
-    fun_browser "${app_ip}:${app_port}"
+    fun_browser "${config_web_service_name}" 
   fi
 
   ${BASEDIR}/bin/${unison_platform}/unison ${project_path} ssh://root@$(minikube ip)//app \
@@ -140,19 +144,13 @@ if [ -n "${project_path}" ]; then
   -batch \
   -prefer newer \
   -fastcheck true \
-  -repeat 1 &
-
-  unison_pid=$!
+  -repeat watch
+  -ignore "Path .git/"
 fi
 
-fun_clenup() {
+fun_cleanup() {
   minikube stop
   exit
 }
 
-trap fun_clean_up SIGHUP SIGINT SIGTERM
-
-while true
-do
-  sleep 1
-done
+trap fun_cleanup SIGHUP SIGINT SIGTERM
