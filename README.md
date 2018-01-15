@@ -7,6 +7,8 @@
 ## Prerequisites
 Install VirtualBox (Linux) or Hyperkit (MacOS) by yourself.
 
+
+## Mac OS related tips
 ### Hyperkit install tips
 ```console
 brew tap markeissler/hyperkit
