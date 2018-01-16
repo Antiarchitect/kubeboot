@@ -5,22 +5,7 @@
 # Example of running Rails app with PostgreSQL support within local Kubernetes cluster on Minikube.
 
 ## Prerequisites
-Install VirtualBox (Linux) or Hyperkit (MacOS) by yourself.
-
-
-## Mac OS related tips
-### Hyperkit install tips
-```console
-brew tap markeissler/hyperkit
-brew install hyperkit
-```
-
-### unison-fsmonitor install tips
-`unison-fsmonitor` is needed for Unison to work in watch mode.
-```console
-brew tap eugenmayer/dockersync
-brew install eugenmayer/dockersync/unox
-```
+Install VirtualBox or KVM on Linux by yourself.
 
 ## Test application
 

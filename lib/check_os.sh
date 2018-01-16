@@ -7,7 +7,7 @@ case "$(uname -s)" in
     Darwin*)    _os=Mac;;
     CYGWIN*)    _os=Cygwin;;
     MINGW*)     _os=MinGw;;
-    *)          _os="UNKNOWN:${unameOut}"
+    *)          _os="UNKNOWN"
 esac
 
 case "${_os}" in

@@ -20,7 +20,19 @@ fun_asdf_install() {
   asdf global "${plugin_name}" "${plugin_version}"
 }
 
-for component in "${PROPOSE_INSTALL[@]}"
+fun_brew_install() {
+  local formula_name=$1
+  local formula_source=$2
+
+  if [ ! -z "${formula_source}" ]; then
+    brew tap "${formula_source}"
+  fi
+
+  brew install "${formula_name}"
+}
+
+
+for component in "${PROPOSE_ASDF_INSTALL[@]}"
 do
   if [[ "${component}" == "ASDF" ]]; then
     rm -rf $HOME/.asdf
@@ -55,6 +67,17 @@ do
   
   if [[ "${component}" == "kubectl" ]]; then
     fun_asdf_install kubectl "${KUBECTL_VERSION}"
+  fi
+done
+
+for component in "${PROPOSE_BREW_INSTALL[@]}"
+do
+  if [[ "${component}" == "HyperKit" ]]; then
+    fun_brew_install hyperkit "markeissler/hyperkit"
+  fi
+
+  if [[ "${component}" == "unison-fsmonitor" ]]; then
+    fun_brew_install "eugenmayer/dockersync/unox" "eugenmayer/dockersync"
   fi
 done
 

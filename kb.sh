@@ -20,7 +20,7 @@ KUBERNETES_VERSION=${KUBERNETES_VERSION:-1.8.0}
 . ${BASEDIR}/lib/check.sh
 fun_run_check
 
-if [[ "${#PROPOSE_INSTALL[@]}" -gt 0 ]]; then
+if [[ "${#PROPOSE_ASDF_INSTALL[@]}" -gt 0 ]]; then
   while true; do
     echo -e "${Y}Some requirements are not met, but Kubeboot can install them. Proceed? [y/n] ${NONE}"
     read yn
