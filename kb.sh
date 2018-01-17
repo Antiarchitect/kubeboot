@@ -41,7 +41,7 @@ set -e
 
 . ${BASEDIR}/lib/up.sh
 
-eval project_path="${1}"
+eval project_path="${1%/}"
 
 if [ -n "${project_path}" ]; then
   . ${BASEDIR}/lib/yaml_parser.sh
@@ -90,7 +90,8 @@ if [ -n "${project_path}" ]; then
     minikube ssh "docker run --rm -v /app:/service:Z ${config_app_image_tag} sh -c 'bundle config --local path ./vendor/bundle && bundle config --local bin ./vendor/bundle/bin && bundle install'"
   fi
 
-  helm install --name "${config_app_image_tag}" "${project_path}/.helm"
+  helm_chart_path="${config_helm_path:-.helm}"
+  helm install --name "${config_app_image_tag}" "${project_path}/${helm_chart_path}"
 
   minikube dashboard
 

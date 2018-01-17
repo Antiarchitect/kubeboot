@@ -50,6 +50,7 @@ to run inside the local kubernetes cluster.
 ### Parameters
 | Parameter                 | Description                                                                             |
 |---------------------------|-----------------------------------------------------------------------------------------|
+| `helm_path`               | Path to the helm chart. `.helm` by default.                                                                |
 | `app_image_tag`           | Docker image with your application runtime. Will be used to name Helm release.          |
 | `web_service_name`        | Kubernetes service holding http server so kubeboot can open app in the browser.         |
 | `dockerfiles`             | Array of hashes with all docker images to be built from your `.dockerfiles`.            | 

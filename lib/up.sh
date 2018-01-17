@@ -18,21 +18,22 @@ minikube ssh "sudo cp /home/docker/.ssh/authorized_keys /root/.ssh"
 minikube ssh "sudo chown -R root:root /root/.ssh"
 
 context_name="minikube"
-echo -e "${G}Initializing Helm...${NONE}"
-helm init --upgrade --kube-context "${context_name}" # Not sure if it belongs here. Should it be placed into language library part?
-kubectl config use-context "${context_name}" # Ensure we are working with minikube context.
-
-# this for loop waits until kubectl can access the api server that Minikube has created
-echo -e "${Y}Waiting Kubernetes is ready...${NONE}"
-for i in {1..150}; do # timeout for 5 minutes
-  kubectl get pods &> /dev/null
-  if [ $? -eq 0 ]; then
-    break
-  fi
-  sleep 1
-done
+echo -en "${Y}Initializing Helm... ${NONE}"
+helm init --upgrade --kube-context "${context_name}" > /dev/null # Not sure if it belongs here. Should it be placed into language library part?
+kubectl config use-context "${context_name}" > /dev/null # Ensure we are working with minikube context.
+echo -e "${G}OK!${NONE}"
 
 # Tiller wait workaround https://github.com/kubernetes/helm/issues/2114
 # We should wait until --wait option will be available for `helm init`
-echo -e "${G}Rolling out Tiller deployment...${NONE}"
-kubectl rollout status -w deployment/tiller-deploy --namespace=kube-system;
+# This workaround does not work! https://github.com/kubernetes/kubernetes/issues/40224
+# kubectl rollout status --watch deployment/tiller-deploy --namespace=kube-system
+echo -en "${Y}Rolling out Tiller deployment...${NONE}"
+for i in {1..150}; do # timeout for 5 minutes
+  kubectl rollout status deployment/tiller-deploy --namespace=kube-system > /dev/null
+  if [ $? -eq 0 ]; then
+    echo -e "${G} OK!${NONE}"
+    break
+  fi
+  echo -en "${Y}.${NONE}"
+  sleep 1
+done
