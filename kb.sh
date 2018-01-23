@@ -90,8 +90,16 @@ if [ -n "${project_path}" ]; then
     minikube ssh "docker run --rm -v /app:/service:Z ${config_app_image_tag} sh -c 'bundle config --local path ./vendor/bundle && bundle config --local bin ./vendor/bundle/bin && bundle install'"
   fi
 
-  helm_chart_path="${config_helm_path:-.helm}"
-  helm install --name "${config_app_image_tag}" "${project_path}/${helm_chart_path}"
+  helm_chart_path="${project_path}/${config_helm_path}"
+  eval helm_chart_path="${helm_chart_path%/}"
+  helm_values=""
+  if [ ! -z "${config_values_filename}" ]; then
+    helm_values="${helm_chart_path}/${config_values_filename}"
+    eval helm_values="${helm_values%/}"
+    helm_values="-f ${helm_values}"
+  fi
+
+  helm install --name "${config_app_image_tag}" ${helm_values} "${helm_chart_path}"
 
   minikube dashboard
 
