@@ -17,10 +17,9 @@ minikube ssh "sudo chmod 700 /root/.ssh"
 minikube ssh "sudo cp /home/docker/.ssh/authorized_keys /root/.ssh"
 minikube ssh "sudo chown -R root:root /root/.ssh"
 
-context_name="minikube"
+kubectl config use-context "minikube" > /dev/null # Ensure we are working with minikube context.
 echo -en "${Y}Initializing Helm... ${NONE}"
-helm init --upgrade --kube-context "${context_name}" > /dev/null # Not sure if it belongs here. Should it be placed into language library part?
-kubectl config use-context "${context_name}" > /dev/null # Ensure we are working with minikube context.
+helm init --upgrade > /dev/null # Not sure if it belongs here. Should it be placed into language library part?
 echo -e "${G}OK!${NONE}"
 
 # Tiller wait workaround https://github.com/kubernetes/helm/issues/2114
