@@ -1,6 +1,7 @@
 # TODO
 * Check if installed version of the component is lower than required. Version upgrade abiltiy.
 * Cleanup. Remove all installable components along with config files.
+* Abiltiy to choose between KVM and VB in linux environment.
 
 # Example of running Rails app with PostgreSQL support within local Kubernetes cluster on Minikube.
 
