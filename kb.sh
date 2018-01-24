@@ -99,7 +99,7 @@ if [ -n "${project_path}" ]; then
     helm_values="-f ${helm_values}"
   fi
 
-  helm install --name "${config_app_image_tag}" ${helm_values} "${helm_chart_path}"
+  helm install "${helm_chart_path}" --name "${config_app_image_tag}" ${helm_values}
 
   minikube dashboard
 

@@ -35,6 +35,8 @@ minikube dashboard
 ```
 
 ## Know your app url:
+Application should open automatically if `web_service_name` parameter is set in `kubeboot.yaml`, but you can easily
+find out what url your apllication have (if any): 
 ```console
 export NODE_PORT=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services my-rails-dev-helm-rails)
 export NODE_IP=$(kubectl get nodes --namespace default -o jsonpath="{.items[0].status.addresses[0].address}")
