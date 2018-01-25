@@ -64,4 +64,7 @@ to run inside the local kubernetes cluster.
 Is the place all your service-related dockerfiles for development are located in.
 
 ## .helm
-Is your application Helm chart.                                                                                                                      
+Is your application Helm chart.
+
+![http://evrone.com](https://photos-5.dropbox.com/t/2/AADAVCKNgmogeYvDVLAGpbdGodiyyg7x3AyrZW2b3pAU4A/12/17522072/png/32x32/3/1516914000/0/2/evrone-sponsored-logo.png/EPHEiA0Y3qoRIAIoAg/G-h7Mqfb6g_nCZl0fMskpvxLa3gqohLrzfThA7iq-l0?dl=0&preserve_transparency=1&size=2048x1536&size_mode=3 "http://evrone.com")
+                                                                                                                 
