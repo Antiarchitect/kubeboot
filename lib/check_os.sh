@@ -13,7 +13,7 @@ esac
 case "${_os}" in
   Linux)
     unison_platform="linux-amd64"
-    minikube_driver="kvm2"
+    minikube_driver="${LINUX_MINIKUBE_DRIVER}"
     ;;
   Mac)
     unison_platform="darwin-amd64"

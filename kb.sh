@@ -4,6 +4,12 @@ set -o pipefail
 
 BASEDIR=$(dirname "$0")
 
+HELM_VERSION=${HELM_VERSION:-2.8.1}
+MINIKUBE_VERSION=${MINIKUBE_VERSION:-0.25.0}
+KUBECTL_VERSION=${KUBECTL_VERSION:-1.9.2}
+KUBERNETES_VERSION=${KUBERNETES_VERSION:-1.8.0}
+LINUX_MINIKUBE_DRIVER=${LINUX_MINIKUBE_DRIVER:-kvm2}
+
 . ${BASEDIR}/lib/colors.sh
 . ${BASEDIR}/lib/check_os.sh
 
@@ -11,11 +17,6 @@ os_check="Checking OS... "
 echo -en "${M}${os_check}${NONE}"
 for ((i=0; i < (40 - ${#os_check}); i++)){ echo -n " "; }
 echo -e "${G}OK! ${C}${_os}${NONE}"
-
-HELM_VERSION=${HELM_VERSION:-2.8.1}
-MINIKUBE_VERSION=${MINIKUBE_VERSION:-0.25.0}
-KUBECTL_VERSION=${KUBECTL_VERSION:-1.9.2}
-KUBERNETES_VERSION=${KUBERNETES_VERSION:-1.8.0}
 
 . ${BASEDIR}/lib/check.sh
 fun_run_check
