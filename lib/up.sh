@@ -19,7 +19,7 @@ minikube ssh "sudo chown -R root:root /root/.ssh"
 
 kubectl config use-context "minikube" > /dev/null # Ensure we are working with minikube context.
 echo -en "${Y}Initializing Helm... ${NONE}"
-helm init > /dev/null # Not sure if it belongs here. Should it be placed into language library part?
+helm init --wait > /dev/null # Not sure if it belongs here. Should it be placed into language library part?
 echo -e "${G}OK!${NONE}"
 
 # Tiller wait workaround https://github.com/kubernetes/helm/issues/2114
